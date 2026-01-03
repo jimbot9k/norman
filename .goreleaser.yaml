@@ -1,0 +1,23 @@
+project_name: norman
+
+builds:
+  - id: norman
+    main: ./main.go
+    binary: norman
+    goos: [linux, windows, darwin]
+    goarch: [amd64, arm64]
+    ldflags:
+    - -s -w
+    - -X github.com/jimbot9k/norman/internal/version.Version={{.Version}}
+    - -X github.com/jimbot9k/norman/internal/version.Commit={{.Commit}}
+    - -X github.com/jimbot9k/norman/internal/version.Date={{.Date}}
+
+archives:
+  - format: tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+
+changelog:
+  use: github

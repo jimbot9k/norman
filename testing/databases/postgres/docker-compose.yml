@@ -1,0 +1,21 @@
+services:
+  database: 
+    image: postgres:18
+    environment:
+      POSTGRES_DB: TESTING_DATABASE
+      POSTGRES_USER: USER
+      POSTGRES_PASSWORD: PASSWORD
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U USER -d TESTING_DATABASE"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ${SCHEMA_DIR}/:/docker-entrypoint-initdb.d:ro
+    tmpfs:
+      - /var/lib/postgresql
+    security_opt:
+      - label:disable
+    network_mode: host
