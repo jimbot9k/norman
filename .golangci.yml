@@ -1,0 +1,57 @@
+run:
+  timeout: 5m
+
+linters:
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - gosimple
+    - unused
+    - structcheck
+    - varcheck
+    - deadcode
+    - gofmt
+    - gofumpt
+    - ineffassign
+    - typecheck
+    - misspell
+    - revive
+    - depguard
+    - gocritic
+    - gosec
+    - dogsled
+    - dupl
+    - gocyclo
+    - nakedret
+    - unparam
+    - whitespace
+    - exportloopref
+    - prealloc
+    - makezero
+    - forbidigo
+    - asasalint
+    - bodyclose
+    - durationcheck
+    - errorlint
+    - exhaustivestruct
+    - forbidigo
+    - gocognit
+    - goerr113
+    - goheader
+    - nolintlint
+    - paralleltest
+    - rowserrcheck
+    - sqlclosecheck
+    - testpackage
+    - wastedassign
+    - wrapcheck
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+formatting:
+  gofmt: true
+  gofumpt: true
