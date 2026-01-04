@@ -19,6 +19,13 @@ jobs:
         with:
           name: coverage-report
           path: coverage.out
+      - name: Show coverage summary in PR comment
+        uses: nwtgck/actions-comment-run@v2
+        with:
+          run: |
+            go tool cover -func=coverage.out | tee coverage-summary.txt
+          comment-title: Go Coverage Summary
+          hide-comment: false
 
   lint:
     runs-on: ubuntu-latest
