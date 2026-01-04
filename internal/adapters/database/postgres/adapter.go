@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -22,7 +23,11 @@ func (a *PostgresAdapter) UniqueSignature() string {
 	return a.Name() + "-" + a.Version()
 }
 
-func (a *PostgresAdapter) IsConectionStringCompatible(connString string) bool {
+func (a *PostgresAdapter) IsConnectionStringCompatible(connString string) bool {
+	if strings.Contains(connString, "@tcp(") {
+		return false
+	}
+
 	_, err := pgx.ParseConfig(connString)
 	if err != nil {
 		return false

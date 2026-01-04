@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	dbo "github.com/jimbot9k/norman/core/dbobjects"
+	dbo "github.com/jimbot9k/norman/internal/core/dbobjects"
 )
 
 func (a *PostgresAdapter) MapDatabase() (*dbo.Database, []error) {

@@ -3,7 +3,7 @@ package core
 import (
 	"fmt"
 
-	"github.com/jimbot9k/norman/core/dbobjects"
+	"github.com/jimbot9k/norman/internal/core/dbobjects"
 )
 
 // Adapter defines the interface that all database adapters must implement.
@@ -15,8 +15,8 @@ type Adapter interface {
 	Version() string
 	// UniqueSignature returns a unique identifier for this adapter type.
 	UniqueSignature() string
-	// IsConectionStringCompatible reports whether the adapter can handle the given connection string.
-	IsConectionStringCompatible(connString string) bool
+	// IsConnectionStringCompatible reports whether the adapter can handle the given connection string.
+	IsConnectionStringCompatible(connString string) bool
 	// Connect establishes a connection using the provided connection string.
 	Connect(connString string) error
 	// Close terminates the active database connection.
@@ -40,14 +40,14 @@ func NewAdapterManager(adapters []Adapter) *AdapterManager {
 		adapters: make(map[string]Adapter),
 	}
 	for _, a := range adapters {
-		n.RegisterAdapter(a)
+		n.registerAdapter(a)
 	}
 	return n
 }
 
 // RegisterAdapter adds an adapter to the manager's registry.
 // The adapter is keyed by its UniqueSignature.
-func (n *AdapterManager) RegisterAdapter(a Adapter) {
+func (n *AdapterManager) registerAdapter(a Adapter) {
 	if n.adapters == nil {
 		n.adapters = make(map[string]Adapter)
 	}
@@ -58,7 +58,7 @@ func (n *AdapterManager) RegisterAdapter(a Adapter) {
 // the given connection string, or nil if no compatible adapter is found.
 func (n *AdapterManager) findCompatibleAdapter(connString string) Adapter {
 	for _, a := range n.adapters {
-		if a.IsConectionStringCompatible(connString) {
+		if a.IsConnectionStringCompatible(connString) {
 			return a
 		}
 	}
