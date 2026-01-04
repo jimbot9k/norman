@@ -35,6 +35,8 @@ linters:
     - whitespace
     - wrapcheck
     - wsl_v5
+    - gocyclo
+    - perfsprint
   exclusions:
     generated: lax
     presets:
