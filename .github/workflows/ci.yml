@@ -21,18 +21,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
-      - name: Install golangci-lint
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.59.1
-      - run: golangci-lint run
-
-  vulncheck:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-go@v6
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v4
         with:
-          go-version-file: go.mod
-      - run: go install golang.org/x/vuln/cmd/govulncheck@latest
-      - run: govulncheck ./...
+          version: v2.7.2

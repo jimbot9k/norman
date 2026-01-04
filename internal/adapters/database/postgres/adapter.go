@@ -29,11 +29,7 @@ func (a *PostgresAdapter) IsConnectionStringCompatible(connString string) bool {
 	}
 
 	_, err := pgx.ParseConfig(connString)
-	if err != nil {
-		return false
-	}
-
-	return true
+	return err == nil
 }
 
 func (a *PostgresAdapter) Connect(connString string) error {

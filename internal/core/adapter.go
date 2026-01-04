@@ -68,7 +68,6 @@ func (n *AdapterManager) findCompatibleAdapter(connString string) Adapter {
 // Connect establishes a database connection using a compatible adapter.
 // It returns an error if no compatible adapter is found or if the connection fails.
 func (n *AdapterManager) Connect(connString string) (Adapter, error) {
-
 	if n.activeAdapter != nil && n.activeAdapter.IsConnected() {
 		return nil, fmt.Errorf("an adapter is already connected")
 	}
@@ -80,7 +79,7 @@ func (n *AdapterManager) Connect(connString string) (Adapter, error) {
 
 	err := adapter.Connect(connString)
 	if err != nil {
-		return nil, fmt.Errorf("failed to connect using adapter %s: %v", adapter.UniqueSignature(), err)
+		return nil, fmt.Errorf("failed to connect using adapter %s: %w", adapter.UniqueSignature(), err)
 	}
 	n.activeAdapter = adapter
 	return n.GetActiveAdapter(), nil
@@ -94,7 +93,7 @@ func (n *AdapterManager) Close() error {
 
 	err := n.activeAdapter.Close()
 	if err != nil {
-		return fmt.Errorf("failed to close connection: %v", err)
+		return fmt.Errorf("failed to close connection: %w", err)
 	}
 	n.activeAdapter = nil
 	return nil

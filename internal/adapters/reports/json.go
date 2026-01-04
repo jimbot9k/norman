@@ -34,7 +34,7 @@ func (w *JSONReportWriter) WriteInventoryReport(filePath string, db *dbo.Databas
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(filePath, data, 0644)
+	return os.WriteFile(filePath, data, 0600)
 }
 
 // JSON representation structs for serialization (private)

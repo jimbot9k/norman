@@ -7,11 +7,10 @@ import (
 	"strings"
 )
 
-
 type Runner struct {
-	adapterManager   *AdapterManager
-	connectionString string
-	reportOutputDir  string
+	adapterManager                *AdapterManager
+	connectionString              string
+	reportOutputDir               string
 	inventoryReportWriterRegistry map[string]*InventoryReportWriter
 }
 
@@ -25,7 +24,7 @@ func NewRunner(adapters []Adapter, reports []InventoryReportWriter) *Runner {
 	}
 
 	var r = &Runner{
-		adapterManager: NewAdapterManager(adapters),
+		adapterManager:                NewAdapterManager(adapters),
 		inventoryReportWriterRegistry: reportOptionsMap,
 	}
 	return r
@@ -35,7 +34,7 @@ func (r *Runner) Run() error {
 
 	var outputDir = flag.String("output-dir", "./norman/", "Directory to output reports to")
 	var connStr = flag.String("conn", "", "Database connection string")
-	var reportCsv *string = flag.String("report-types", "all", "Comma-separated list of report types to generate " + r.reportOptionHelperString())
+	var reportCsv = flag.String("report-types", "all", "Comma-separated list of report types to generate "+r.reportOptionHelperString())
 	flag.Parse()
 
 	if *connStr == "" {
@@ -69,7 +68,10 @@ func (r *Runner) Run() error {
 	if len(selectedReports) == 0 {
 		fmt.Println("No report types specified, skipping report generation.")
 	} else {
-		os.MkdirAll(r.reportOutputDir, os.ModePerm)
+		err := os.MkdirAll(r.reportOutputDir, os.ModePerm)
+		if err != nil {
+			return err
+		}
 	}
 	for writer := range selectedReports {
 		fmt.Printf("Generating report: %s\n", (*writer).GetReportName())
@@ -88,7 +90,7 @@ func (r *Runner) parseReportArgument(reportArg string) map[*InventoryReportWrite
 	for _, reportKey := range strings.Split(reportArg, ",") {
 
 		reportKey = strings.TrimSpace(reportKey)
-		if reportKey == "all"{
+		if reportKey == "all" {
 			for _, writer := range r.inventoryReportWriterRegistry {
 				selectedReports[writer] = struct{}{}
 			}

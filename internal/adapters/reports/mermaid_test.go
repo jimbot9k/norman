@@ -121,13 +121,13 @@ func TestWriteSchemaEntities(t *testing.T) {
 		// Create child table with FK
 		childTable := dbo.NewTable("employees", nil)
 		childCol := dbo.NewColumn("id", "integer", false)
-		deptIdCol := dbo.NewColumn("department_id", "integer", false)
+		deptIDCol := dbo.NewColumn("department_id", "integer", false)
 		childTable.AddColumn(childCol)
-		childTable.AddColumn(deptIdCol)
+		childTable.AddColumn(deptIDCol)
 
 		fk := dbo.NewForeignKey("fk_dept", "departments")
 		fk.SetTable(childTable)
-		fk.AddColumn(deptIdCol)
+		fk.AddColumn(deptIDCol)
 		fk.AddReferencedColumn(parentCol)
 		childTable.AddForeignKey(fk)
 		schema.AddTable(childTable)
@@ -524,11 +524,11 @@ func TestIsPrimaryKeyColumn(t *testing.T) {
 
 	t.Run("composite primary key", func(t *testing.T) {
 		table := dbo.NewTable("user_roles", nil)
-		userIdCol := dbo.NewColumn("user_id", "integer", false)
-		roleIdCol := dbo.NewColumn("role_id", "integer", false)
-		table.AddColumn(userIdCol)
-		table.AddColumn(roleIdCol)
-		table.SetPrimaryKey(dbo.NewPrimaryKey("pk", table, []*dbo.Column{userIdCol, roleIdCol}))
+		userIDCol := dbo.NewColumn("user_id", "integer", false)
+		roleIDCol := dbo.NewColumn("role_id", "integer", false)
+		table.AddColumn(userIDCol)
+		table.AddColumn(roleIDCol)
+		table.SetPrimaryKey(dbo.NewPrimaryKey("pk", table, []*dbo.Column{userIDCol, roleIDCol}))
 
 		if !isPrimaryKeyColumn(table, "user_id") {
 			t.Error("expected user_id to be in composite PK")
@@ -558,13 +558,13 @@ func TestIsForeignKeyColumn(t *testing.T) {
 	t.Run("column is not in any foreign key", func(t *testing.T) {
 		table := dbo.NewTable("orders", nil)
 		idCol := dbo.NewColumn("id", "integer", false)
-		userIdCol := dbo.NewColumn("user_id", "integer", false)
+		userIDCol := dbo.NewColumn("user_id", "integer", false)
 		table.AddColumn(idCol)
-		table.AddColumn(userIdCol)
+		table.AddColumn(userIDCol)
 
 		fk := dbo.NewForeignKey("fk_user", "users")
 		fk.SetTable(table)
-		fk.AddColumn(userIdCol)
+		fk.AddColumn(userIDCol)
 		table.AddForeignKey(fk)
 
 		if isForeignKeyColumn(table, "id") {
@@ -584,15 +584,15 @@ func TestIsForeignKeyColumn(t *testing.T) {
 
 	t.Run("composite foreign key", func(t *testing.T) {
 		table := dbo.NewTable("order_items", nil)
-		orderIdCol := dbo.NewColumn("order_id", "integer", false)
-		productIdCol := dbo.NewColumn("product_id", "integer", false)
-		table.AddColumn(orderIdCol)
-		table.AddColumn(productIdCol)
+		orderIDCol := dbo.NewColumn("order_id", "integer", false)
+		productIDCol := dbo.NewColumn("product_id", "integer", false)
+		table.AddColumn(orderIDCol)
+		table.AddColumn(productIDCol)
 
 		fk := dbo.NewForeignKey("fk_order_product", "orders")
 		fk.SetTable(table)
-		fk.AddColumn(orderIdCol)
-		fk.AddColumn(productIdCol)
+		fk.AddColumn(orderIDCol)
+		fk.AddColumn(productIDCol)
 		table.AddForeignKey(fk)
 
 		if !isForeignKeyColumn(table, "order_id") {
@@ -605,19 +605,19 @@ func TestIsForeignKeyColumn(t *testing.T) {
 
 	t.Run("multiple foreign keys", func(t *testing.T) {
 		table := dbo.NewTable("orders", nil)
-		userIdCol := dbo.NewColumn("user_id", "integer", false)
-		shippingIdCol := dbo.NewColumn("shipping_address_id", "integer", false)
-		table.AddColumn(userIdCol)
-		table.AddColumn(shippingIdCol)
+		userIDCol := dbo.NewColumn("user_id", "integer", false)
+		shippingIDCol := dbo.NewColumn("shipping_address_id", "integer", false)
+		table.AddColumn(userIDCol)
+		table.AddColumn(shippingIDCol)
 
 		fk1 := dbo.NewForeignKey("fk_user", "users")
 		fk1.SetTable(table)
-		fk1.AddColumn(userIdCol)
+		fk1.AddColumn(userIDCol)
 		table.AddForeignKey(fk1)
 
 		fk2 := dbo.NewForeignKey("fk_shipping", "addresses")
 		fk2.SetTable(table)
-		fk2.AddColumn(shippingIdCol)
+		fk2.AddColumn(shippingIDCol)
 		table.AddForeignKey(fk2)
 
 		if !isForeignKeyColumn(table, "user_id") {
@@ -637,56 +637,56 @@ func TestIntegration_FullERD(t *testing.T) {
 
 		// Users table
 		usersTable := dbo.NewTable("users", nil)
-		userIdCol := dbo.NewColumn("id", "integer", false)
-		usersTable.AddColumn(userIdCol)
+		userIDCol := dbo.NewColumn("id", "integer", false)
+		usersTable.AddColumn(userIDCol)
 		usersTable.AddColumn(dbo.NewColumn("email", "character varying(255)", false))
 		usersTable.AddColumn(dbo.NewColumn("created_at", "timestamp with time zone", false))
-		usersTable.SetPrimaryKey(dbo.NewPrimaryKey("users_pkey", usersTable, []*dbo.Column{userIdCol}))
+		usersTable.SetPrimaryKey(dbo.NewPrimaryKey("users_pkey", usersTable, []*dbo.Column{userIDCol}))
 		schema.AddTable(usersTable)
 
 		// Orders table
 		ordersTable := dbo.NewTable("orders", nil)
-		orderIdCol := dbo.NewColumn("id", "integer", false)
-		orderUserIdCol := dbo.NewColumn("user_id", "integer", false)
-		ordersTable.AddColumn(orderIdCol)
-		ordersTable.AddColumn(orderUserIdCol)
+		orderIDCol := dbo.NewColumn("id", "integer", false)
+		orderUserIDCol := dbo.NewColumn("user_id", "integer", false)
+		ordersTable.AddColumn(orderIDCol)
+		ordersTable.AddColumn(orderUserIDCol)
 		ordersTable.AddColumn(dbo.NewColumn("total", "numeric(10,2)", false))
-		ordersTable.SetPrimaryKey(dbo.NewPrimaryKey("orders_pkey", ordersTable, []*dbo.Column{orderIdCol}))
+		ordersTable.SetPrimaryKey(dbo.NewPrimaryKey("orders_pkey", ordersTable, []*dbo.Column{orderIDCol}))
 
 		fkUser := dbo.NewForeignKey("fk_orders_user", "users")
 		fkUser.SetTable(ordersTable)
-		fkUser.AddColumn(orderUserIdCol)
+		fkUser.AddColumn(orderUserIDCol)
 		ordersTable.AddForeignKey(fkUser)
 		schema.AddTable(ordersTable)
 
 		// Order items (junction table with composite PK)
 		itemsTable := dbo.NewTable("order_items", nil)
-		itemOrderIdCol := dbo.NewColumn("order_id", "integer", false)
-		itemProductIdCol := dbo.NewColumn("product_id", "integer", false)
-		itemsTable.AddColumn(itemOrderIdCol)
-		itemsTable.AddColumn(itemProductIdCol)
+		itemOrderIDCol := dbo.NewColumn("order_id", "integer", false)
+		itemProductIDCol := dbo.NewColumn("product_id", "integer", false)
+		itemsTable.AddColumn(itemOrderIDCol)
+		itemsTable.AddColumn(itemProductIDCol)
 		itemsTable.AddColumn(dbo.NewColumn("quantity", "smallint", false))
-		itemsTable.SetPrimaryKey(dbo.NewPrimaryKey("order_items_pkey", itemsTable, []*dbo.Column{itemOrderIdCol, itemProductIdCol}))
+		itemsTable.SetPrimaryKey(dbo.NewPrimaryKey("order_items_pkey", itemsTable, []*dbo.Column{itemOrderIDCol, itemProductIDCol}))
 
 		fkOrder := dbo.NewForeignKey("fk_items_order", "orders")
 		fkOrder.SetTable(itemsTable)
-		fkOrder.AddColumn(itemOrderIdCol)
+		fkOrder.AddColumn(itemOrderIDCol)
 		itemsTable.AddForeignKey(fkOrder)
 
 		fkProduct := dbo.NewForeignKey("fk_items_product", "products")
 		fkProduct.SetTable(itemsTable)
-		fkProduct.AddColumn(itemProductIdCol)
+		fkProduct.AddColumn(itemProductIDCol)
 		itemsTable.AddForeignKey(fkProduct)
 		schema.AddTable(itemsTable)
 
 		// Products table
 		productsTable := dbo.NewTable("products", nil)
-		productIdCol := dbo.NewColumn("id", "integer", false)
-		productsTable.AddColumn(productIdCol)
+		productIDCol := dbo.NewColumn("id", "integer", false)
+		productsTable.AddColumn(productIDCol)
 		productsTable.AddColumn(dbo.NewColumn("name", "text", false))
 		productsTable.AddColumn(dbo.NewColumn("price", "decimal", false))
 		productsTable.AddColumn(dbo.NewColumn("is_active", "boolean", false))
-		productsTable.SetPrimaryKey(dbo.NewPrimaryKey("products_pkey", productsTable, []*dbo.Column{productIdCol}))
+		productsTable.SetPrimaryKey(dbo.NewPrimaryKey("products_pkey", productsTable, []*dbo.Column{productIDCol}))
 		schema.AddTable(productsTable)
 
 		result := GenerateMermaidERD(db)

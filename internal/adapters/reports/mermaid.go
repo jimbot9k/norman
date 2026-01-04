@@ -28,7 +28,7 @@ func (w *MermaidReportWriter) GetReportName() string {
 // WriteInventoryReport writes a Mermaid ERD diagram to the specified file
 func (w *MermaidReportWriter) WriteInventoryReport(filePath string, db *dbo.Database) error {
 	mermaid := GenerateMermaidERD(db)
-	return os.WriteFile(filePath, []byte(mermaid), 0644)
+	return os.WriteFile(filePath, []byte(mermaid), 0600)
 }
 
 // GenerateMermaidERD generates a Mermaid ERD diagram string from a database
@@ -86,11 +86,12 @@ func writeColumnDefinition(sb *strings.Builder, table *dbo.Table, col *dbo.Colum
 	isPK := isPrimaryKeyColumn(table, col.Name())
 	isFK := isForeignKeyColumn(table, col.Name())
 
-	if isPK && isFK {
+	switch {
+	case isPK && isFK:
 		sb.WriteString(" PK \"FK\"")
-	} else if isPK {
+	case isPK:
 		sb.WriteString(" PK")
-	} else if isFK {
+	case isFK:
 		sb.WriteString(" FK")
 	}
 
