@@ -1,7 +1,6 @@
 package core
 
 import (
-	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -30,12 +29,7 @@ func NewRunner(adapters []Adapter, reports []InventoryReportWriter) *Runner {
 	return r
 }
 
-func (r *Runner) Run() error {
-
-	var outputDir = flag.String("output-dir", "./norman/", "Directory to output reports to")
-	var connStr = flag.String("conn", "", "Database connection string")
-	var reportCsv = flag.String("report-types", "all", "Comma-separated list of report types to generate "+r.reportOptionHelperString())
-	flag.Parse()
+func (r *Runner) Run(connStr *string, outputDir *string, reportCsv *string) error {
 
 	if *connStr == "" {
 		return fmt.Errorf("connection string is required")
@@ -104,19 +98,4 @@ func (r *Runner) parseReportArgument(reportArg string) map[*InventoryReportWrite
 		}
 	}
 	return selectedReports
-}
-
-func (r *Runner) reportOptionHelperString() string {
-	var reportOptionsString = "("
-	for key := range r.inventoryReportWriterRegistry {
-		if reportOptionsString != "(" {
-			reportOptionsString += ", "
-		}
-		reportOptionsString += key
-	}
-	if reportOptionsString != "(" {
-		reportOptionsString += ","
-	}
-	reportOptionsString += " all)"
-	return reportOptionsString
 }
